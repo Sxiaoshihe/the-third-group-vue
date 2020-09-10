@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    </style>
+</head>
+
+<body>
+
+    <div id="div1">
+        <h1>页面丑，但是好用</h1>
+        <input type="text" v-model='search' placeholder="卡号">
+        <ul>
+            <li v-for='item in searchlist' :key='item.id'>
+                {{item.cardId}} --- {{item.money}} -- <button @click='del(item.id)'>删除</button>
+                ---<button @click='mod(item.id)'>修改</button>
+            </li>
+        </ul>
+        <input type="text" v-model='addform.id' placeholder="id"><br />
+        <input type="text" v-model='addform.cardId' placeholder="cardId"><br />
+        <input type="text" v-model='addform.pwd' placeholder="pwd"><br />
+        <input type="text" v-model='addform.money' placeholder="money"><br />
+        <button @click='add'>添加</button>
+        <div id="modify" v-show='isshow'>
+            <input type="text" v-model='modform.id' placeholder="id"><br />
+            <input type="text" v-model='modform.cardId' placeholder="cardId"><br />
+            <input type="text" v-model='modform.pwd' placeholder="pwd"><br />
+            <input type="text" v-model='modform.money' placeholder="money"><br />
+            <button @click='modifysure'>确定</button>
+        </div>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#div1',
+            data: {
+                isshow:false,
+                search: '',
+                list: [
+                    { id: 1, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                    { id: 2, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                    { id: 3, cardId: "6225880287861234", pwd: "888888", money: 5000 },
+                    { id: 4, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                    { id: 5, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                    { id: 6, cardId: "6225880287861234", pwd: "888888", money: 5000 },
+                    { id: 7, cardId: "6225880287860549", pwd: "909090", money: 9000 },
+                    { id: 8, cardId: "6225880287862345", pwd: "666666", money: 100 },
+                    { id: 9, cardId: "6225880287861234", pwd: "888888", money: 5000 }
+                ],
+                addform: {
+                    id: '',
+                    cardId: '',
+                    pwd: '',
+                    money: ''
+                },
+                modform: {
+                    id: '',
+                    cardId: '',
+                    pwd: '',
+                    money: ''
+                }
+
+            },
+            computed: {
+                searchlist: function () {
+                    var that = this;
+                    return this.list.filter(function (item) {
+                        return item.cardId.indexOf(that.search) >= 0
+                    })
+                    // var arr = [];
+                    // for(var i=0;i<this.list.length;i++){
+                    //     if(this.list[i].cardId.indexOf(this.search)>=0){
+                    //         arr.push(this.list[i]);
+                    //     };
+                    // };
+                    // return arr;
+                }
+            },
+            methods: {
+                del: function (id) {//删除
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.list.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                add: function () {
+                    var obj = { ...this.addform };
+                    this.list.push(obj);
+                    this.addform.id = '';
+                    this.addform.cardId = '';
+                    this.addform.pwd = '';
+                    this.addform.money = '';
+                },
+                mod: function (id) { //修改按钮，点击弹出修改框
+                    this.isshow = !this.isshow;
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == id) {
+                            this.modform.id = this.list[i].id;
+                            this.modform.cardId = this.list[i].cardId;
+                            this.modform.pwd = this.list[i].pwd;
+                            this.modform.money = this.list[i].money;
+                        }
+                    };
+                },
+                modifysure: function (id) {//修改确定按钮，点击修改原数据
+                    this.isshow = !this.isshow;
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].id == this.modform.id) {
+                            this.list[i].id = this.modform.id;
+                            this.list[i].cardId = this.modform.cardId;
+                            this.list[i].pwd = this.modform.pwd;
+                            this.list[i].money = this.modform.money;
+                            this.modform.id = '';
+                            this.modform.cardId = '';
+                            this.modform.pwd = '';
+                            this.modform.money = '';
+                        }
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>
