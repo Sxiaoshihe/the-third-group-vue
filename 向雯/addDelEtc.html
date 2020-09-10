@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增删改查</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 查询 -->
+        <input type="text" v-model='search' placeholder="卡号">
+        <br />
+        <!-- 添加 -->
+        <input type="text" v-model='addForm.ID' placeholder="id">
+        <input type="text" v-model='addForm.CardId' placeholder="卡号">
+        <input type="text" v-model='addForm.password' placeholder="密码">
+        <input type="text" v-model='addForm.money' placeholder="余额">
+        <button @click='add()'>添加</button>
+        <ul>
+
+            <li v-for='item in searchList' :key='item.ID'>
+                <span @click='modify(item.ID)'>{{item.CardId}}:{{item.money}}</span>
+                <button @click='del(item.ID)'>删除</button>
+            </li>
+        </ul>
+        <!-- 修改 -->
+        <div id="modifyBox" v-if='isShow'>
+            <input type="text" readonly v-model='modList.ID'>
+            <input type="text" v-model='modList.CardId'>
+            <input type="text" v-model='modList.money'>
+            <button @click='btnModify()'>完成</button>
+        </div>
+    </div>
+
+
+    <script src="js/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                search: '',
+                list: [
+                    { ID: 1, CardId: '111', password: '111', money: 100 },
+                    { ID: 2, CardId: '121', password: '121', money: 120 },
+                    { ID: 3, CardId: '222', password: '222', money: 200 },
+                    { ID: 4, CardId: '333', password: '333', money: 300 },
+                    { ID: 5, CardId: '444', password: '444', money: 400 },
+                    { ID: 6, CardId: '555', password: '555', money: 500 },
+                    { ID: 7, CardId: '562', password: '562', money: 500 },
+                    { ID: 8, CardId: '635', password: '635', money: 600 },
+                ],
+                addForm: {
+                    ID: '',
+                    CardId: '',
+                    password: '',
+                    money: ''
+                },
+                isShow: false,
+                modList: {
+                    ID: '',
+                    CardId: '',
+                    money: ''
+                }
+            },
+            computed: {
+                // 查找
+                searchList: function () {
+                    return this.list.filter((item) => {
+                        return item.CardId.indexOf(this.search) >= 0;
+                    })
+                    /* var arr = [];
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].CardId.indexOf(this.search) >= 0) {
+                            arr.push(this.list[i]);
+                        }
+                    }
+                    return arr; */
+                }
+            },
+            methods: {
+                // 删除
+                del: function (id) {
+                    for (var i = 0; i < this.list.length; i++) {
+                        if (this.list[i].ID == id) {
+                            this.list.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                // 添加
+                add: function () {
+                    // 为了防止添加的时候，列表的值与输入的值相关联
+                    var obj = { ...this.addForm };
+                    this.list.push(obj);
+                    // 将input清空
+                    this.addForm.ID = '';
+                    this.addForm.CardId = '';
+                    this.addForm.password = '';
+                    this.addForm.money = '';
+                },
+                // 修改
+                modify: function (id) {
+                    this.isShow = !this.isShow;
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].ID == id) {
+                            this.modList.ID = this.list[i].ID;
+                            this.modList.CardId = this.list[i].CardId;
+                            this.modList.money = this.list[i].money;
+                            break;
+                        }
+                    }
+                },
+                // 点击完成
+                btnModify: function () {
+                    this.isShow = !this.isShow;
+                    for (let i = 0; i < this.list.length; i++) {
+                        if (this.list[i].ID == this.modList.ID) {
+                            this.list[i].CardId = this.modList.CardId;
+                            this.list[i].money = this.modList.money;
+                            break;
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
